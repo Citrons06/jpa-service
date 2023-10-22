@@ -1,6 +1,7 @@
 package jpabook.jpashop;
 
 import jpabook.jpashop.domain.Member;
+import jpabook.jpashop.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 class MemberRepositoryTest {
 
-    @Autowired MemberRepository memberRepository;
+    @Autowired
+    MemberRepository memberRepository;
 
     @Transactional
     @Rollback(value = false)
@@ -19,16 +21,15 @@ class MemberRepositoryTest {
     public void testMember() throws Exception {
         // given
         Member member = new Member();
-        member.setUsername("memberA");
+        member.setId(member.getId());
 
         // when
-        Long savedId = memberRepository.save(member);
-        Member findMember = memberRepository.find(savedId);
+        Member savedMember = memberRepository.save(member);
+        Member findMember = memberRepository.findOne(member.getId());
 
         // then
-        Assertions.assertThat(savedId).isEqualTo(findMember.getId());
-        Assertions.assertThat(member.getUsername()).isEqualTo(findMember.getUsername());
-        Assertions.assertThat(findMember).isEqualTo(member);
+        Assertions.assertThat(savedMember).isEqualTo(findMember);
+        Assertions.assertThat(member.getName()).isEqualTo(findMember.getName());
 
         // 영속성 컨텍스트에서 식별자가 같으면 같은 엔티티로 인식한다. JPA 엔티티 동일성 보장!
         System.out.println("findMember == member: " + (findMember == member));
