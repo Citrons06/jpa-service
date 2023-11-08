@@ -50,8 +50,6 @@ public class MemberApiController {
         private String name;
     }
 
-
-
     /**
      * 등록 V1: 요청 값으로 Member 엔티티를 직접 받는다.
      */
@@ -78,7 +76,7 @@ public class MemberApiController {
      */
     @PutMapping("/api/v2/members/{id}")
     public UpdateMemberResponse updateMemberV2(
-            @PathVariable("id") Long id,
+            @PathVariable Long id,
             @RequestBody @Valid UpdateMemberRequest request) {
         memberService.update(id, request.getName());
         Member findMember = memberService.findOne(id);  //커맨드와 쿼리 분리
